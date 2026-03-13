@@ -22,6 +22,17 @@ interface OpenCVType {
   COLOR_GRAY2RGBA: number;
   COLOR_BGR2GRAY: number;
   COLOR_GRAY2BGR: number;
+  ROTATE_90_CLOCKWISE: number;
+  ROTATE_180: number;
+  ROTATE_90_COUNTERCLOCKWISE: number;
+  FLIP_HORIZONTAL: number;
+  FLIP_VERTICAL: number;
+  getStructuringElement?: any;
+  morphologyEx?: any;
+  MORPH_OPEN?: number;
+  MORPH_CLOSE?: number;
+  MORPH_GRADIENT?: number;
+  bilateralFilter?: any;
 }
 
 export function useOpenCV() {
@@ -30,45 +41,44 @@ export function useOpenCV() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const loadOpenCV = async () => {
-      try {
-        // Create a script element to load OpenCV dynamically
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = 'https://docs.opencv.org/4.7.0/opencv.js';
+    let isMounted = true;
+    let checkInterval: NodeJS.Timeout;
+    let timeout: NodeJS.Timeout;
 
-        script.onload = () => {
+    const checkOpenCV = () => {
+      // @ts-ignore
+      if (window.cv && window.cv.Mat && window.cv.imread) {
+        if (isMounted) {
           // @ts-ignore
-          if (window.cv) {
-            // @ts-ignore
-            setCv(window.cv);
-            setIsLoading(false);
-          } else {
-            setError('Failed to load OpenCV');
-            setIsLoading(false);
-          }
-        };
-
-        script.onerror = () => {
-          setError('Failed to load OpenCV script');
+          setCv(window.cv);
           setIsLoading(false);
-        };
-
-        document.head.appendChild(script);
-
-        return () => {
-          // Cleanup
-          if (document.head.contains(script)) {
-            document.head.removeChild(script);
-          }
-        };
-      } catch (err) {
-        setError('Error loading OpenCV: ' + String(err));
-        setIsLoading(false);
+          clearInterval(checkInterval);
+          clearTimeout(timeout);
+        }
+        return true;
       }
+      return false;
     };
 
-    loadOpenCV();
+    // Start checking immediately (script is loaded in layout)
+    if (!checkOpenCV()) {
+      checkInterval = setInterval(checkOpenCV, 100);
+
+      // Timeout after 20 seconds
+      timeout = setTimeout(() => {
+        if (isMounted) {
+          clearInterval(checkInterval);
+          setError('Failed to load image processing engine. Please refresh the page.');
+          setIsLoading(false);
+        }
+      }, 20000);
+    }
+
+    return () => {
+      isMounted = false;
+      clearInterval(checkInterval);
+      clearTimeout(timeout);
+    };
   }, []);
 
   return { cv, isLoading, error };

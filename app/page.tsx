@@ -386,13 +386,24 @@ export default function ImageEditorPage() {
     }
   }, [history.current]);
 
-  if (cvError) {
+  if (cvError || (cvLoading && !cv)) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="text-center">
-          <p className="text-destructive font-medium">Error loading OpenCV</p>
-          <p className="text-muted-foreground text-sm">{cvError}</p>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background gap-4">
+        {cvError ? (
+          <>
+            <p className="text-destructive font-medium text-lg">Error loading Image Editor</p>
+            <p className="text-muted-foreground text-sm max-w-md text-center">{cvError}</p>
+            <p className="text-muted-foreground text-xs text-center mt-4">
+              Please refresh the page to try again. If the problem persists, check your internet connection.
+            </p>
+          </>
+        ) : (
+          <>
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <p className="text-muted-foreground">Initializing image processing engine...</p>
+            <p className="text-xs text-muted-foreground">This may take a few moments</p>
+          </>
+        )}
       </div>
     );
   }
@@ -410,7 +421,7 @@ export default function ImageEditorPage() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              {cvLoading && (
+              {!cv && (
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span className="text-xs">Loading OpenCV...</span>
@@ -432,7 +443,7 @@ export default function ImageEditorPage() {
           // Editor Layout
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Canvas Area */}
-            <div className="lg:col-span-2.5 space-y-4">
+            <div className="lg:col-span-3 space-y-4">
               {/* Canvas */}
               <EditorCanvas imageSrc={imageState.current} onCanvasRef={(c) => { if (c) Object.assign(canvasRef, { current: c }); }} />
 

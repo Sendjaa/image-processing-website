@@ -68,7 +68,7 @@ export function EditorCanvas({ imageSrc, onCanvasRef, showOriginal = false }: Ed
       <div ref={containerRef} className="inline-block">
         <canvas
           ref={canvasRef}
-          className="max-w-full max-h-full display-block"
+          className="max-w-full max-h-full block"
           style={{ border: '1px solid var(--border)' }}
         />
       </div>

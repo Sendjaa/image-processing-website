@@ -35,7 +35,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
+      <head>
+        <script async src="https://docs.opencv.org/4.7.0/opencv.js"></script>
+      </head>
       <body className="font-sans antialiased">
         {children}
         <Analytics />
