@@ -17,8 +17,9 @@ export function useHistory<T extends string>(initialState: T) {
 
   const push = useCallback((data: T) => {
     setHistory((prev) => {
+      const lastIndex = prev.length - 1;
       // Remove any future states if we're not at the end
-      const newHistory = prev.slice(0, currentIndex + 1);
+      const newHistory = prev.slice(0, lastIndex + 1);
 
       // Add new state
       newHistory.push({ data, timestamp: Date.now() });
@@ -26,7 +27,6 @@ export function useHistory<T extends string>(initialState: T) {
       // Limit history size
       if (newHistory.length > MAX_HISTORY) {
         newHistory.shift();
-        return newHistory;
       }
 
       return newHistory;
@@ -36,7 +36,7 @@ export function useHistory<T extends string>(initialState: T) {
       const newIndex = prev + 1;
       return newIndex > MAX_HISTORY - 1 ? MAX_HISTORY - 1 : newIndex;
     });
-  }, [currentIndex]);
+  }, []);
 
   const undo = useCallback(() => {
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : 0));

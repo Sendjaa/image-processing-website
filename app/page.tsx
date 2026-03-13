@@ -479,7 +479,7 @@ export default function ImageEditorPage() {
             </div>
 
             {/* Panels Sidebar */}
-            <div className="lg:col-span-1.5 space-y-4">
+            <div className="lg:col-span-1 space-y-4">
               {/* Upload New / Export */}
               <div className="flex gap-2">
                 <Button
