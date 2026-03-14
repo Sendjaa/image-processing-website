@@ -241,7 +241,7 @@ export default function ImageEditorPage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <h1 className="text-3xl font-bold text-foreground">ImageProcessor</h1>
           <p className="text-sm text-muted-foreground">
-            Professional image editing tool
+            Tugas Besar Pengolahan Citra Digital
           </p>
         </div>
       </div>

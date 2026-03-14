@@ -71,7 +71,7 @@ This command installs all required packages from `package.json`:
 - And other dependencies
 
 **Installation time**: 2-5 minutes depending on internet speed
-
+ 
 #### Step 3: Run Development Server
 
 ```bash
